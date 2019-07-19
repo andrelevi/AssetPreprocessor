@@ -18,17 +18,17 @@ namespace AssetPreprocessor.Scripts.Editor
         };
         
         [Header("Match Criteria")]
-        public float MaxClipLengthInSeconds = 5f;
+        public float MaxClipLengthInSeconds = 999f;
         
         [Header("Load Settings")]
-        public bool LoadInBackground = true;
+        public bool LoadInBackground;
+        public AudioClipLoadType AudioClipLoadType = AudioClipLoadType.DecompressOnLoad;
         public bool PreloadAudioData = true;
         
         [Header("Quality Settings")]
-        public bool ForceToMono = true;
-        public float Quality = 0.6f;
-        public AudioClipLoadType AudioClipLoadType = AudioClipLoadType.CompressedInMemory;
+        public bool ForceToMono;
         public AudioCompressionFormat AudioCompressionFormat = AudioCompressionFormat.Vorbis;
+        [Range(0, 1)] public float Quality = 1f;
 
         [Header("Sample Settings")]
         public AudioSampleRateSetting AudioSampleRateSetting = AudioSampleRateSetting.PreserveSampleRate;
