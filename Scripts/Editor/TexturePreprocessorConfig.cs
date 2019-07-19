@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using TextureCompressionQuality = UnityEditor.TextureCompressionQuality;
 
 namespace AssetPreprocessor.Scripts.Editor
@@ -10,7 +9,7 @@ namespace AssetPreprocessor.Scripts.Editor
     public class TexturePreprocessorConfig : BasePreprocessorConfig
     {
         [Header("Platforms")]
-        [FormerlySerializedAs("PlatformsAffected")] public List<string> PlatformsRegexList = new List<string>
+        public List<string> PlatformsRegexList = new List<string>
         {
             "Android",
             "iOS",
@@ -22,7 +21,7 @@ namespace AssetPreprocessor.Scripts.Editor
         public List<string> SkipIfCurrentTextureFormatContains = new List<string>();
 
         [Header("Texture Settings")]
-        [FormerlySerializedAs("MaxResTextureSize")] public int MaxTextureSize = 4096;
+        public int MaxTextureSize = 4096;
         public bool EnableReadWrite;
         public bool ForceLinear;
         public TextureImporterNPOTScale NPOTScale = TextureImporterNPOTScale.ToNearest;

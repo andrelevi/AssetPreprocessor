@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace AssetPreprocessor.Scripts.Editor
 {
@@ -21,7 +20,7 @@ namespace AssetPreprocessor.Scripts.Editor
         [Header("Asset Path Regex Matching")]
         
         [Tooltip("Config will be used if asset path matches regex list. Use a * wildcard to match all.")]
-        [FormerlySerializedAs("ContainsRegexList")] public List<string> MatchRegexList = new List<string>();
+        public List<string> MatchRegexList = new List<string>();
 
         [Tooltip("Any asset path matching the ignore regex list will be ignored.")]
         public List<string> IgnoreRegexList = new List<string>();

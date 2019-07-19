@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace AssetPreprocessor.Scripts.Editor
 {
@@ -9,7 +8,7 @@ namespace AssetPreprocessor.Scripts.Editor
     public class AudioPreprocessorConfig : BasePreprocessorConfig
     {
         [Header("Platforms")]
-        [FormerlySerializedAs("PlatformsAffected")] public List<string> PlatformsRegexList = new List<string>
+        public List<string> PlatformsRegexList = new List<string>
         {
             "Android",
             "iOS",
