@@ -32,3 +32,7 @@ Example regex strings:
 * Standalone (for OSX, Windows and Linuix standalone builds)
 
 <img src="/README/platform-regex-strings.png?raw" width="500">
+
+Recommended AudioPreprocessorConfig Settings
+=
+Check out the "Suggested Settings" tables in this article: https://www.gamasutra.com/blogs/ZanderHulme/20190107/333794/Unity_Audio_Import_Optimisation__getting_more_BAM_for_your_RAM.php
