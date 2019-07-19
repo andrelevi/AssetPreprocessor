@@ -81,6 +81,12 @@ namespace AssetPreprocessor.Scripts.Editor
                 importer.forceToMono = config.ForceToMono;
                 needsReimport = true;
             }
+            
+            if (importer.ambisonic != config.Ambisonic)
+            {
+                importer.ambisonic = config.Ambisonic;
+                needsReimport = true;
+            }
 
             var sampleSettings = importer.GetOverrideSampleSettings(platformName);
 

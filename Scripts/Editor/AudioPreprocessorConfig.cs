@@ -27,6 +27,7 @@ namespace AssetPreprocessor.Scripts.Editor
         
         [Header("Quality Settings")]
         public bool ForceToMono;
+        public bool Ambisonic;
         public AudioCompressionFormat AudioCompressionFormat = AudioCompressionFormat.Vorbis;
         [Range(0, 1)] public float Quality = 1f;
 
