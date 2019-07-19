@@ -9,7 +9,7 @@ First Steps
 =
 First, create configs via the window menu:
 
-Assets -> Create -> ScriptableObject -> AssetProcessor
+Assets -> Create -> ScriptableObject -> AssetPreprocessor
 
 ![](/README/create-config-location.png?raw)
 
@@ -27,9 +27,11 @@ Platform Regex Strings
 =
 
 Example regex strings:
-* Android
-* iOS
-* Standalone (for OSX, Windows and Linuix standalone builds)
+* `Android`
+* `iOS`
+* `Standalone` (for OSX, Windows and Linuix standalone builds)
+
+If unsure of the string for your current platform, try logging `EditorUserBuildSettings.activeBuildTarget.ToString()`.
 
 <img src="/README/platform-regex-strings.png?raw" width="500">
 
