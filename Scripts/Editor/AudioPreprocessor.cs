@@ -38,7 +38,7 @@ namespace AssetPreprocessor.Scripts.Editor
 
             if (configs.Count == 0)
             {
-                Debug.Log($"No existing {nameof(AudioPreprocessorConfig)} found.");
+                Debug.Log($"Could not find a {nameof(AudioPreprocessorConfig)} in project.");
 
                 return;
             }
@@ -126,7 +126,7 @@ namespace AssetPreprocessor.Scripts.Editor
             {
                 config.PlatformsRegexList.ForEach(platformRegexString => importer.SetOverrideSampleSettings(platformRegexString, sampleSettings));
                 
-                // Always be sure to set the platform the current platform string, in case the current platform was
+                // Be sure to set the platform override for the current platform string, in case the current platform was
                 // NOT a perfect match to one of the platform regex strings.
                 importer.SetOverrideSampleSettings(EditorUserBuildSettings.activeBuildTarget.ToString(), sampleSettings);
                 

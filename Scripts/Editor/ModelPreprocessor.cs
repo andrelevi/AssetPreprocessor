@@ -21,7 +21,7 @@ namespace AssetPreprocessor.Scripts.Editor
 
             if (configs.Count == 0)
             {
-                Debug.Log($"No existing {nameof(ModelPreprocessorConfig)} found.");
+                Debug.Log($"Could not find a {nameof(ModelPreprocessorConfig)} in project.");
 
                 return;
             }
