@@ -20,10 +20,13 @@ Tweak the asset path regex string lists to ensure that each config only targets 
 <img src="/README/asset-path-regex-strings.png?raw" width="500">
 
 ## Platform Regex Strings
+The platform regex strings should be perfect matches to the platform strings as much as possible.
+
 Example platform regex strings:
 * `Android`
 * `iOS`
 * `Standalone` (for OSX, Windows and Linuix standalone builds)
+* `StandaloneOSX` (a more accurate platform string for OSX)
 
 If unsure of the string for your current platform, try logging `EditorUserBuildSettings.activeBuildTarget.ToString()`.
 

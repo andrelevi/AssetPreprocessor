@@ -124,7 +124,12 @@ namespace AssetPreprocessor.Scripts.Editor
 
             if (needsReimport || config.ForcePreprocess)
             {
-                config.PlatformsRegexList.ForEach(platform => importer.SetOverrideSampleSettings(platform, sampleSettings));
+                config.PlatformsRegexList.ForEach(platformRegexString => importer.SetOverrideSampleSettings(platformRegexString, sampleSettings));
+                
+                // Always be sure to set the platform the current platform string, in case the current platform was
+                // NOT a perfect match to one of the platform regex strings.
+                importer.SetOverrideSampleSettings(EditorUserBuildSettings.activeBuildTarget.ToString(), sampleSettings);
+                
                 Debug.Log($"Processed: {audioClip}", audioClip);
             }
             else

@@ -106,17 +106,29 @@ namespace AssetPreprocessor.Scripts.Editor
         {
             Debug.Log($"Setting: {textureSize} | Format: {format} | {textureName}", texture);
 
-            config.PlatformsRegexList.ForEach(platformName =>
+            config.PlatformsRegexList.ForEach(platformRegexString =>
             {
                 textureImporter.SetPlatformTextureSettings(new TextureImporterPlatformSettings
                 {
                     overridden = true,
-                    name = platformName,
+                    name = platformRegexString,
                     maxTextureSize = textureSize,
                     format = format,
                     compressionQuality = (int) config.TextureCompressionQuality,
                     allowsAlphaSplitting = false
                 });
+            });
+            
+            // Always be sure to set the platform the current platform string, in case the current platform was
+            // NOT a perfect match to one of the platform regex strings.
+            textureImporter.SetPlatformTextureSettings(new TextureImporterPlatformSettings
+            {
+                overridden = true,
+                name = EditorUserBuildSettings.activeBuildTarget.ToString(),
+                maxTextureSize = textureSize,
+                format = format,
+                compressionQuality = (int) config.TextureCompressionQuality,
+                allowsAlphaSplitting = false
             });
 
             textureImporter.npotScale = config.NPOTScale;
