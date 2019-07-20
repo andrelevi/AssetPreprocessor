@@ -1,7 +1,10 @@
 # Asset Preprocessor
 Config-based workflow for [Unity's AssetPostprocessor class](https://docs.unity3d.com/ScriptReference/AssetPostprocessor.html).
 
-### Supported asset types
+### Config Example
+<img src="/README/texture-preprocessor-config-inspector-example.jpg?raw" width="500">
+
+### Supported Asset Types
 * **Textures**
   - [TexturePreprocessorConfig](/Scripts/Editor/TexturePreprocessorConfig.cs)
 * **Audio Clips**
@@ -13,7 +16,7 @@ Config-based workflow for [Unity's AssetPostprocessor class](https://docs.unity3
 * Unity 2019.1.x
 
 # Usage
-First, create configs via the window menu:
+First, create configs via the `Assets` menu:
 
 `Assets -> Create -> ScriptableObject -> AssetPreprocessor`
 
