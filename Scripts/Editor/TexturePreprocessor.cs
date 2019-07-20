@@ -81,7 +81,7 @@ namespace AssetPreprocessor.Scripts.Editor
             }
 			
             var maxTextureSize = config.MaxTextureSize;
-            var multipliedNativeRes = Mathf.RoundToInt(nativeSize * config.NativeResMultiplier);
+            var multipliedNativeRes = Mathf.RoundToInt(nativeSize * config.NativeTextureSizeMultiplier);
             var textureSize = Mathf.Min(multipliedNativeRes, maxTextureSize);
 			
             var format = hasAlpha ? config.RGBAFormat : config.RGBFormat;

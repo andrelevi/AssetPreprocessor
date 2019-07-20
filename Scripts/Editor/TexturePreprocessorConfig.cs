@@ -26,7 +26,8 @@ namespace AssetPreprocessor.Scripts.Editor
         public bool EnableReadWrite;
         public bool ForceLinear;
         public TextureImporterNPOTScale NPOTScale = TextureImporterNPOTScale.ToNearest;
-        public float NativeResMultiplier = 1f;
+        [Tooltip("By default each texture's max size will be based upon the texture's native size. Sometimes you might want to use a multiplier (such as 0.5) of that native size.")]
+        public float NativeTextureSizeMultiplier = 1f;
 
         [Header("Compression Settings")]
         public TextureImporterFormat RGBFormat = TextureImporterFormat.Automatic;
