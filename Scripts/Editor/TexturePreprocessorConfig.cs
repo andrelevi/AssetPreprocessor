@@ -18,7 +18,8 @@ namespace AssetPreprocessor.Scripts.Editor
         };
 
         [Header("Skip Preprocessor Options")]
-        public List<string> SkipIfCurrentTextureFormatContains = new List<string>();
+        [Tooltip("Allows skipping preprocessing if current texture format matches a certain regex. Useful to prevent lengthy preprocessing for textures that already have correct format set.")]
+        public List<string> SkipIfCurrentTextureFormatMatchesRegexList = new List<string>();
 
         [Header("Texture Settings")]
         public int MaxTextureSize = 4096;

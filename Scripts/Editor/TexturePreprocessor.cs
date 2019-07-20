@@ -66,7 +66,7 @@ namespace AssetPreprocessor.Scripts.Editor
             Debug.Log($"Using: {config.name}", config);
             
             // If already contains correct texture format, skip adjusting import settings.
-            var matchingSkipRegex = config.SkipIfCurrentTextureFormatContains.Find(regexString => new Regex(regexString).IsMatch(currentFormat));
+            var matchingSkipRegex = config.SkipIfCurrentTextureFormatMatchesRegexList.Find(regexString => new Regex(regexString).IsMatch(currentFormat));
             var alreadyContainsFormat = matchingSkipRegex != null;
             if (!config.ForcePreprocess && alreadyContainsFormat)
             {
