@@ -1,6 +1,14 @@
 # Asset Preprocessor
 Config-based workflow for [Unity's AssetPostprocessor class](https://docs.unity3d.com/ScriptReference/AssetPostprocessor.html).
 
+### Supported asset types
+* **Textures**
+  - [TexturePreprocessorConfig](/Scripts/Editor/TexturePreprocessorConfig.cs)
+* **Audio Clips**
+  - [AudioPreprocessorConfig](/Scripts/Editor/AudioPreprocessorConfig.cs)
+* **Models**
+  - [ModelPreprocessorConfig](/Scripts/Editor/ModelPreprocessorConfig.cs)
+
 ### Supported Unity Versions
 * Unity 2019.1.x
 
