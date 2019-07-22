@@ -13,6 +13,7 @@ Config-based workflow for [Unity's AssetPostprocessor class](https://docs.unity3
   - [ModelPreprocessorConfig](/Scripts/Editor/ModelPreprocessorConfig.cs)
 
 ### Supported Unity Versions
+* Unity 2018.2.x
 * Unity 2019.1.x
 
 # Usage

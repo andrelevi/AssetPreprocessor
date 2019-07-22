@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
+#if UNITY_2019_1_OR_NEWER
 using TextureCompressionQuality = UnityEditor.TextureCompressionQuality;
+#endif
 
 namespace AssetPreprocessor.Scripts.Editor
 {
