@@ -20,16 +20,10 @@ namespace AssetPreprocessor.Scripts.Editor
             var platformName = EditorUserBuildSettings.activeBuildTarget.ToString();
             var audioClip = AssetDatabase.LoadAssetAtPath<AudioClip>(assetPath);
 
-            // BUG:
-            //
-            // Unity 2019.1.9f1 - OSX
-            //
-            // When an AudioClip is first imported into the project, attempting to load it in OnPreprocessAudio()
-            // as an AudioClip results in null. Forcing an AssetDatabase.Refresh() will then allow the asset
-            // to be properly loaded as an AudioClip in the subsequent OnPreprocessAudio() hook.
             if (audioClip == null)
             {
-                // Workaround for when an AudioClip is loaded as null for its first OnPreprocessAudio().
+                // Handle asset not being inside AssetDatabase yet for its first OnPreprocess call.
+                // Need to refresh AssetDatabase once so that can load asset.
                 AssetDatabase.Refresh();
                 return;
             }

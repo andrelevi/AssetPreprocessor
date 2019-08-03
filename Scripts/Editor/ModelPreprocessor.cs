@@ -16,6 +16,14 @@ namespace AssetPreprocessor.Scripts.Editor
             var assetPath = modelImporter.assetPath;
             var modelName = AssetPreprocessorUtils.GetAssetNameFromPath(modelImporter.assetPath);
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            
+            if (model == null)
+            {
+                // Handle asset not being inside AssetDatabase yet for its first OnPreprocess call.
+                // Need to refresh AssetDatabase once so that can load asset.
+                AssetDatabase.Refresh();
+                return;
+            }
 
             var configs = AssetPreprocessorUtils.GetScriptableObjectsOfType<ModelPreprocessorConfig>();
 
