@@ -62,6 +62,14 @@ namespace AssetPreprocessor.Scripts.Editor
             var nativeSize = Mathf.NextPowerOfTwo(Mathf.Max(nativeTextureSize.width, nativeTextureSize.height));
             var currentFormat = currentPlatformSettings.format.ToString();
             
+            // Handle when native size for texture is too small. Happens for baked light maps and reflection maps.
+            // Need to reimport asset once to get correct native texture size.
+            if (nativeSize <= 4)
+            {
+                AssetDatabase.Refresh();
+                return;
+            }
+            
             Debug.Log($"Processing: {textureName} | Native size: {nativeSize} | Current format: {currentFormat}", texture);
             Debug.Log($"Using: {config.name}", config);
             
