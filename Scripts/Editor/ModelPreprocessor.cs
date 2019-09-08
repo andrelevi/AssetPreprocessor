@@ -63,6 +63,11 @@ namespace AssetPreprocessor.Scripts.Editor
             modelImporter.isReadable = config.EnableReadWrite;
             modelImporter.meshCompression = config.MeshCompression;
 
+            if (config.ForceGenerateLightmapUVs)
+            {
+                modelImporter.generateSecondaryUV = true;
+            }
+
             if (modelImporter.importAnimation)
             {
                 modelImporter.animationCompression = config.ModelImporterAnimationCompression;
