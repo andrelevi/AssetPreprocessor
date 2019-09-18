@@ -2,6 +2,10 @@
 using UnityEditor;
 using UnityEngine;
 
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
+
 #if UNITY_2019_1_OR_NEWER
 using TextureCompressionQuality = UnityEditor.TextureCompressionQuality;
 #endif
@@ -17,7 +21,6 @@ namespace AssetPreprocessor.Scripts.Editor
             "Android",
             "iOS",
             "Standalone",
-            "Default"
         };
 
         [Header("Skip Preprocessor Options")]
@@ -33,6 +36,17 @@ namespace AssetPreprocessor.Scripts.Editor
         public TextureImporterNPOTScale NPOTScale = TextureImporterNPOTScale.ToNearest;
         [Tooltip("By default each texture's max size will be based upon the texture's native size. Sometimes you might want to use a multiplier (such as 0.5) of that native size.")]
         public float NativeTextureSizeMultiplier = 1f;
+
+        [Header("Filtering Settings")]
+        public bool ForceFilterMode;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(ForceFilterMode))]
+        #endif
+        public FilterMode FilterMode = FilterMode.Bilinear;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(ForceFilterMode))]
+        #endif
+        public int AnisoLevel = 1;
 
         [Header("Compression Settings")]
         [Tooltip("Format used if the texture does NOT have an alpha channel.")]

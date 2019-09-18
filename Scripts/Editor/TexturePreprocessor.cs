@@ -97,7 +97,12 @@ namespace AssetPreprocessor.Scripts.Editor
             if (config.ForceLinear)
             {
                 textureImporter.sRGBTexture = false;
-                Debug.Log("Forcing linear.", texture);
+            }
+
+            if (config.ForceFilterMode)
+            {
+                textureImporter.anisoLevel = config.AnisoLevel;
+                textureImporter.filterMode = config.FilterMode;
             }
 
             SetTextureImporterPlatformSetting(config, textureImporter, texture, textureName, textureSize, format);
