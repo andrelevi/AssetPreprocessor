@@ -8,8 +8,12 @@ namespace AssetPreprocessor.Scripts.Editor
     {
         /// <summary>
         /// https://docs.unity3d.com/ScriptReference/AssetPostprocessor.OnPreprocessAudio.html
+        /// 
+        /// IMPORTANT:
+        /// Use OnPostprocessAudio() hook instead of OnPreprocessAudio() since OnPostprocessAudio gives a reference to
+        /// the AudioClip, which is needed for AudioClip.length.
         /// </summary>
-        private void OnPreprocessAudio()
+        private void OnPostprocessAudio(AudioClip audioClip)
         {
             var importer = assetImporter as AudioImporter;
 
@@ -18,13 +22,11 @@ namespace AssetPreprocessor.Scripts.Editor
             var assetPath = importer.assetPath;
             var assetName = AssetPreprocessorUtils.GetAssetNameFromPath(importer.assetPath);
             var platformName = EditorUserBuildSettings.activeBuildTarget.ToString();
-            var audioClip = AssetDatabase.LoadAssetAtPath<AudioClip>(assetPath);
 
             if (audioClip == null)
             {
-                // Handle asset not being inside AssetDatabase yet for its first OnPreprocess call.
-                // Need to refresh AssetDatabase once so that can load asset.
-                AssetDatabase.Refresh();
+                Debug.LogError($"{typeof(AudioClip)} is null. Path: {assetPath}");
+                
                 return;
             }
 
@@ -51,6 +53,7 @@ namespace AssetPreprocessor.Scripts.Editor
 
                 if (!AssetPreprocessorUtils.DoesRegexStringListMatchString(configToTest.PlatformsRegexList, platformName)) continue;
                 
+                // Check that the AudioClip length is under the config's limit for clip length.
                 if (audioClip.length > configToTest.MaxClipLengthInSeconds) continue;
 
                 // Found matching config.
@@ -64,30 +67,30 @@ namespace AssetPreprocessor.Scripts.Editor
             // If could not find a matching config, don't process the asset.
             if (config == null) return;
 
-            var needsReimport = false;
+            var hasSampleSettingsOverrides = false;
 
             if (importer.loadInBackground != config.LoadInBackground)
             {
                 importer.loadInBackground = config.LoadInBackground;
-                needsReimport = true;
+                hasSampleSettingsOverrides = true;
             }
 
             if (importer.preloadAudioData != config.PreloadAudioData)
             {
                 importer.preloadAudioData = config.PreloadAudioData;
-                needsReimport = true;
+                hasSampleSettingsOverrides = true;
             }
 
             if (importer.forceToMono != config.ForceToMono)
             {
                 importer.forceToMono = config.ForceToMono;
-                needsReimport = true;
+                hasSampleSettingsOverrides = true;
             }
             
             if (importer.ambisonic != config.Ambisonic)
             {
                 importer.ambisonic = config.Ambisonic;
-                needsReimport = true;
+                hasSampleSettingsOverrides = true;
             }
 
             var sampleSettings = importer.GetOverrideSampleSettings(platformName);
@@ -95,40 +98,34 @@ namespace AssetPreprocessor.Scripts.Editor
             if (sampleSettings.loadType != config.AudioClipLoadType)
             {
                 sampleSettings.loadType = config.AudioClipLoadType;
-                needsReimport = true;
+                hasSampleSettingsOverrides = true;
             }
 
             if (sampleSettings.compressionFormat != config.AudioCompressionFormat)
             {
                 sampleSettings.compressionFormat = config.AudioCompressionFormat;
-                needsReimport = true;
+                hasSampleSettingsOverrides = true;
             }
 
             if (System.Math.Abs(sampleSettings.quality - config.Quality) > 0.01f)
             {
                 sampleSettings.quality = config.Quality;
-                needsReimport = true;
+                hasSampleSettingsOverrides = true;
             }
 
             if (sampleSettings.sampleRateSetting != config.AudioSampleRateSetting)
             {
                 sampleSettings.sampleRateSetting = config.AudioSampleRateSetting;
-                needsReimport = true;
+                hasSampleSettingsOverrides = true;
             }
 
-            if (needsReimport || config.ForcePreprocess)
+            if (hasSampleSettingsOverrides || config.ForcePreprocess)
             {
                 config.PlatformsRegexList.ForEach(platformRegexString => importer.SetOverrideSampleSettings(platformRegexString, sampleSettings));
                 
                 // Be sure to set the platform override for the current platform string, in case the current platform was
                 // NOT a perfect match to one of the platform regex strings.
                 importer.SetOverrideSampleSettings(EditorUserBuildSettings.activeBuildTarget.ToString(), sampleSettings);
-                
-                Debug.Log($"Processed: {audioClip}", audioClip);
-            }
-            else
-            {
-                Debug.Log($"Skipping reimport for: {audioClip}", audioClip);
             }
         }
     }
