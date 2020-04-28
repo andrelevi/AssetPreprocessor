@@ -31,6 +31,7 @@ namespace AssetPreprocessor.Scripts.Editor
         [Tooltip("Absolute max size allowed for textures. The texture's native size will be used if it is smaller than the max texture size.")]
         public int MaxTextureSize = 4096;
         public bool EnableReadWrite;
+        public bool GenerateMipMaps = true;
         public bool ForceLinear;
         [Tooltip("Decides how to round when a texture's size is NOT a power of two.")]
         public TextureImporterNPOTScale NPOTScale = TextureImporterNPOTScale.ToNearest;

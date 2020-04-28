@@ -104,6 +104,8 @@ namespace AssetPreprocessor.Scripts.Editor
                 textureImporter.anisoLevel = config.AnisoLevel;
                 textureImporter.filterMode = config.FilterMode;
             }
+            
+            textureImporter.mipmapEnabled = config.GenerateMipMaps;
 
             SetTextureImporterPlatformSetting(config, textureImporter, texture, textureName, textureSize, format);
         }
