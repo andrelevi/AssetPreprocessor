@@ -106,6 +106,7 @@ namespace AssetPreprocessor.Scripts.Editor
             }
             
             textureImporter.mipmapEnabled = config.GenerateMipMaps;
+            textureImporter.streamingMipmaps = config.EnableMipMapStreaming;
 
             SetTextureImporterPlatformSetting(config, textureImporter, texture, textureName, textureSize, format);
         }

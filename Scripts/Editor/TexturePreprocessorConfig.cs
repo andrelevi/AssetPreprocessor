@@ -32,6 +32,7 @@ namespace AssetPreprocessor.Scripts.Editor
         public int MaxTextureSize = 4096;
         public bool EnableReadWrite;
         public bool GenerateMipMaps = true;
+        public bool EnableMipMapStreaming;
         public bool ForceLinear;
         [Tooltip("Decides how to round when a texture's size is NOT a power of two.")]
         public TextureImporterNPOTScale NPOTScale = TextureImporterNPOTScale.ToNearest;
