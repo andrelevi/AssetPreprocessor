@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,12 +32,34 @@ namespace AssetPreprocessor.Scripts.Editor
 
             var assetPath = assetImporter.assetPath;
 
-            if (!AssetPreprocessorUtils.DoesRegexStringListMatchString(MatchRegexList, assetPath)) return false;
+            if (!AssetPreprocessorUtils.DoesRegexStringListMatchString(FilterOutBadRegexStrings(MatchRegexList, nameof(MatchRegexList)), assetPath)) return false;
 
-            // Asset path should NOT match any of the regex checks.
-            if (AssetPreprocessorUtils.DoesRegexStringListMatchString(IgnoreRegexList, assetPath)) return false;
+            // Check that the Asset path does NOT match any ignore regex strings.
+            if (AssetPreprocessorUtils.DoesRegexStringListMatchString(FilterOutBadRegexStrings(IgnoreRegexList, nameof(IgnoreRegexList)), assetPath)) return false;
             
             return true;
+        }
+
+        private List<string> FilterOutBadRegexStrings(List<string> regexStrings, string fieldName)
+        {
+            // Create a copy so that we don't mutate the original list.
+            regexStrings = regexStrings.ToList();
+            
+            for (var i = 0; i < regexStrings.Count; i++)
+            {
+                var regexString = regexStrings[i];
+                
+                if (regexString == string.Empty)
+                {
+                    Debug.LogError($"{name} - {fieldName} - Regex string at index: {i} is empty. Ignoring, otherwise it will match everything.", this);
+
+                    regexStrings.RemoveAt(i);
+                    
+                    i--;
+                }
+            }
+            
+            return regexStrings;
         }
     }
 }
