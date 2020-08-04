@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 
 namespace AssetPreprocessor.Scripts.Editor
@@ -14,7 +16,16 @@ namespace AssetPreprocessor.Scripts.Editor
         public ModelImporterMeshCompression MeshCompression = ModelImporterMeshCompression.Off;
 
         [Header("Animation Settings")]
+        public bool ResampleCurves = true;
         public ModelImporterAnimationCompression ModelImporterAnimationCompression = ModelImporterAnimationCompression.Optimal;
+        public bool KeepOriginalOrientation;
+        public bool KeepOriginalPositionXZ;
+        public bool KeepOriginalPositionY = true;
+        public ClipAnimationMaskType ClipAnimationMaskType = ClipAnimationMaskType.None;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(ClipAnimationMaskType), ClipAnimationMaskType.CreateFromThisModel)]
+        #endif
+        public List<string> MaskBonesToEnable;
         
         [Header("Scene Settings")]
         public bool ImportLights;
