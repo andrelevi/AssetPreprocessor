@@ -18,6 +18,9 @@ namespace AssetPreprocessor.Scripts.Editor
         [Header("Animation Settings")]
         public bool ResampleCurves = true;
         public ModelImporterAnimationCompression ModelImporterAnimationCompression = ModelImporterAnimationCompression.Optimal;
+        
+        [Header("Animation Processing")]
+        public bool EnableAnimationPreprocessing;
         public bool KeepOriginalOrientation;
         public bool KeepOriginalPositionXZ;
         public bool KeepOriginalPositionY = true;

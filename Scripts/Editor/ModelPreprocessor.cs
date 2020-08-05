@@ -78,31 +78,47 @@ namespace AssetPreprocessor.Scripts.Editor
             {
                 modelImporter.importBlendShapes = config.ImportBlendShapes;
             }
-
-            // Enable the bones for ALL of the model's animation clips.
-            for (var i = 0; i < modelImporter.clipAnimations.Length; i++)
+            
+            if (config.EnableAnimationPreprocessing &&
+                modelImporter.animationType == ModelImporterAnimationType.Human)
             {
-                var clip = modelImporter.clipAnimations[i];
-
-                if (clip.maskType != ClipAnimationMaskType.CreateFromThisModel) continue;
+                var clips = modelImporter.clipAnimations.ToArray();
                 
-                var serializedObject = new SerializedObject(modelImporter);
-                
-                var transformMask = serializedObject.FindProperty($"m_ClipAnimations.Array.data[{i}].transformMask");
-
-                var arrayProperty = transformMask.FindPropertyRelative("Array");
-
-                for (var j = 0; j < arrayProperty.arraySize; j++)
+                // Enable the bones for ALL of the model's animation clips.
+                for (var i = 0; i < clips.Length; i++)
                 {
-                    var element = arrayProperty.GetArrayElementAtIndex(j);
+                    var clip = clips[i];
+
+                    if (clip.maskType != ClipAnimationMaskType.CreateFromThisModel) continue;
                     
-                    if (config.MaskBonesToEnable.Contains(element.FindPropertyRelative("m_Path").stringValue))
+                    var serializedObject = new SerializedObject(modelImporter);
+                    
+                    var transformMask = serializedObject.FindProperty($"m_ClipAnimations.Array.data[{i}].transformMask");
+
+                    var arrayProperty = transformMask.FindPropertyRelative("Array");
+
+                    for (var j = 0; j < arrayProperty.arraySize; j++)
                     {
-                        element.FindPropertyRelative("m_Weight").floatValue = 1;
+                        var element = arrayProperty.GetArrayElementAtIndex(j);
+                        
+                        var bonePath = element.FindPropertyRelative("m_Path").stringValue;
+                        
+                        var shouldEnable = false;
+                        
+                        if (AssetPreprocessorUtils.DoesRegexStringListMatchString(config.MaskBonesToEnable, bonePath))
+                        {
+                            Debug.Log($"{clip.name} - Enabling Mask bone: {bonePath}", model);
+                            
+                            shouldEnable = true;
+                        }
+                        
+                        element.FindPropertyRelative("m_Weight").floatValue = shouldEnable ? 1 : 0;
+                        
+                        serializedObject.ApplyModifiedProperties();
                     }
                 }
-
-                serializedObject.ApplyModifiedProperties();
+                    
+                EditorUtility.SetDirty(model);
             }
 
             Debug.Log($"Processed: {model.name}", model);
@@ -127,6 +143,7 @@ namespace AssetPreprocessor.Scripts.Editor
             
             configs = configs
                 .Where(conf => conf.ShouldUseConfigForAssetImporter(assetImporter))
+                .Where(conf => conf.EnableAnimationPreprocessing)
                 .ToList();
             
             configs.Sort((config1, config2) => config1.ConfigSortOrder.CompareTo(config2.ConfigSortOrder));
@@ -139,14 +156,21 @@ namespace AssetPreprocessor.Scripts.Editor
 
                 // Found matching config.
                 config = configToTest;
-
-                Debug.Log($"Processing animations for: {modelName}");
-                Debug.Log($"Using: {config.name}", config);
                 break;
             }
 
             // If could not find a matching config, don't process the asset.
             if (config == null) return;
+            
+            if (modelImporter.clipAnimations.Length > 0 && !config.ForcePreprocess)
+            {
+                Debug.Log($"Skipping Animation Preprocess - {modelName} - Animation has been preprocessed already before.", config);
+                
+                return;
+            }
+            
+            Debug.Log($"Processing animations for: {modelName}");
+            Debug.Log($"Using: {config.name}", config);
             
             var clips = modelImporter.defaultClipAnimations.ToArray();
 
