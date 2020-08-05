@@ -11,6 +11,7 @@ namespace AssetPreprocessor.Scripts.Editor
         [Header("Import Settings")]
         public bool ImportMaterials;
         public bool ImportBlendShapes;
+        public bool SortHierarchyByName = true;
         public bool ForceGenerateLightmapUVs;
         public bool EnableReadWrite = true;
         public ModelImporterMeshCompression MeshCompression = ModelImporterMeshCompression.Off;

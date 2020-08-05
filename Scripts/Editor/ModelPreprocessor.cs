@@ -52,6 +52,7 @@ namespace AssetPreprocessor.Scripts.Editor
             // If could not find a matching config, don't process the asset.
             if (config == null) return;
 
+            modelImporter.sortHierarchyByName = config.SortHierarchyByName;
             modelImporter.importLights = config.ImportLights;
             modelImporter.importVisibility = config.ImportVisibility;
             modelImporter.importCameras = config.ImportCameras;
