@@ -107,7 +107,10 @@ namespace AssetPreprocessor.Scripts.Editor
                         
                         if (AssetPreprocessorUtils.DoesRegexStringListMatchString(config.MaskBonesToEnable, bonePath))
                         {
-                            Debug.Log($"{clip.name} - Enabling Mask bone: {bonePath}", model);
+                            if (config.EnableVerboseLogging)
+                            {
+                                Debug.Log($"{clip.name} - Enabling Mask bone: {bonePath}", model);
+                            }
                             
                             shouldEnable = true;
                         }

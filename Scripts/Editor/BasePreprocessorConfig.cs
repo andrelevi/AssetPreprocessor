@@ -17,6 +17,7 @@ namespace AssetPreprocessor.Scripts.Editor
         
         [Tooltip("Configs with lower sort order are checked first.")]
         public int ConfigSortOrder = 10;
+        public bool EnableVerboseLogging;
 
         [Header("Asset Path Regex Matching")]
         
