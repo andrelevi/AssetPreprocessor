@@ -81,6 +81,12 @@ namespace AssetPreprocessor.Scripts.Editor
             }
             
             if (config.EnableAnimationPreprocessing &&
+                modelImporter.animationType != config.ModelImporterAnimationType)
+            {
+                modelImporter.animationType = config.ModelImporterAnimationType;
+            }
+            
+            if (config.EnableAnimationPreprocessing &&
                 modelImporter.animationType == ModelImporterAnimationType.Human)
             {
                 var clips = modelImporter.clipAnimations.ToArray();

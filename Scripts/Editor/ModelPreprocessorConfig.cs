@@ -22,12 +22,29 @@ namespace AssetPreprocessor.Scripts.Editor
         
         [Header("Animation Processing")]
         public bool EnableAnimationPreprocessing;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(EnableAnimationPreprocessing))]
+        #endif
+        public ModelImporterAnimationType ModelImporterAnimationType = ModelImporterAnimationType.Generic;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(EnableAnimationPreprocessing))]
+        #endif
         public bool KeepOriginalOrientation;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(EnableAnimationPreprocessing))]
+        #endif
         public bool KeepOriginalPositionXZ;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(EnableAnimationPreprocessing))]
+        #endif
         public bool KeepOriginalPositionY = true;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(EnableAnimationPreprocessing))]
+        #endif
         public ClipAnimationMaskType ClipAnimationMaskType = ClipAnimationMaskType.None;
         #if ODIN_INSPECTOR
         [ShowIf(nameof(ClipAnimationMaskType), ClipAnimationMaskType.CreateFromThisModel)]
+        [ShowIf(nameof(EnableAnimationPreprocessing))]
         #endif
         public List<string> MaskBonesToEnable;
         
