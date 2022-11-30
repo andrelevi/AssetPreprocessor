@@ -82,10 +82,15 @@ namespace AssetPreprocessor.Scripts.Editor
                 return;
             }
 			
-            if (config.EnableReadWrite && !textureImporter.isReadable)
+            if (config.EnableReadWrite)
             {
                 Debug.Log("Enabling Read/Write.", texture);
                 textureImporter.isReadable = true;
+            }
+            else
+            {
+                Debug.Log("Disabling Read/Write.", texture);
+                textureImporter.isReadable = false;
             }
 			
             var maxTextureSize = config.MaxTextureSize;

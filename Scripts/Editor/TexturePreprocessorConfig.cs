@@ -30,6 +30,7 @@ namespace AssetPreprocessor.Scripts.Editor
         [Header("Texture Settings")]
         [Tooltip("Absolute max size allowed for textures. The texture's native size will be used if it is smaller than the max texture size.")]
         public int MaxTextureSize = 4096;
+        [Tooltip("Whether the texture should be keep in memory for CPU to read/write. Ideally disabled to conserve RAM, unless you really need to read/write from the texture.")]
         public bool EnableReadWrite;
         public bool GenerateMipMaps = true;
         public bool EnableMipMapStreaming;
