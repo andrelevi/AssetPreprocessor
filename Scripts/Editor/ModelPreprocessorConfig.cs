@@ -12,7 +12,12 @@ namespace AssetPreprocessor.Scripts.Editor
     public class ModelPreprocessorConfig : BasePreprocessorConfig
     {
         [Header("Import Settings")]
+        #if UNITY_2020_1_OR_NEWER
+        public ModelImporterMaterialImportMode ModelImporterMaterialImportMode = ModelImporterMaterialImportMode.ImportStandard;
+        #else
         public bool ImportMaterials;
+        #endif
+        
         public bool ImportBlendShapes;
         public bool SortHierarchyByName = true;
         public bool ForceGenerateLightmapUVs;

@@ -70,10 +70,11 @@ namespace AssetPreprocessor.Scripts.Editor
                 modelImporter.animationCompression = config.ModelImporterAnimationCompression;
             }
 
-            if (modelImporter.importMaterials != config.ImportMaterials)
-            {
-                modelImporter.importMaterials = config.ImportMaterials;
-            }
+            #if UNITY_2020_1_OR_NEWER
+            modelImporter.materialImportMode = config.ModelImporterMaterialImportMode;
+            #else
+            modelImporter.importMaterials = config.ImportMaterials;
+            #endif
 
             if (modelImporter.importBlendShapes != config.ImportBlendShapes)
             {
