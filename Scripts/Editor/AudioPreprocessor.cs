@@ -34,8 +34,6 @@ namespace AssetPreprocessor.Scripts.Editor
 
             if (configs.Count == 0)
             {
-                Debug.Log($"Could not find a {nameof(AudioPreprocessorConfig)} in project.");
-
                 return;
             }
 
