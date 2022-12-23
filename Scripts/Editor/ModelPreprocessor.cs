@@ -84,6 +84,13 @@ namespace AssetPreprocessor.Scripts.Editor
             {
                 modelImporter.animationType = config.ModelImporterAnimationType;
             }
+
+            if (config.EnableRigPreprocessing)
+            {
+                modelImporter.optimizeGameObjects = config.OptimizeGameObjects;
+                modelImporter.extraExposedTransformPaths = config.ExtraExposedTransformPaths;
+                EditorUtility.SetDirty(model);
+            }
             
             if (config.EnableAnimationPreprocessing &&
                 modelImporter.animationType == ModelImporterAnimationType.Human)

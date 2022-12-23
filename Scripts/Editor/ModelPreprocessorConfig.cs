@@ -55,6 +55,17 @@ namespace AssetPreprocessor.Scripts.Editor
         [ShowIf(nameof(EnableAnimationPreprocessing))]
         #endif
         public List<string> MaskBonesToEnable;
+
+        [Header("Rig Settings")]
+        public bool EnableRigPreprocessing;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(EnableRigPreprocessing))]
+        #endif
+        public bool OptimizeGameObjects;
+        #if ODIN_INSPECTOR
+        [ShowIf(nameof(EnableRigPreprocessing))]
+        #endif
+        public string[] ExtraExposedTransformPaths;
         
         [Header("Scene Settings")]
         public bool ImportLights;
