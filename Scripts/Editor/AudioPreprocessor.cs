@@ -25,7 +25,7 @@ namespace AssetPreprocessor.Scripts.Editor
 
             if (audioClip == null)
             {
-                Debug.LogError($"{typeof(AudioClip)} is null. Path: {assetPath}");
+                Debug.LogError($"{typeof(AudioClip)} is null. Path: {assetPath}", importer);
                 
                 return;
             }
@@ -56,9 +56,9 @@ namespace AssetPreprocessor.Scripts.Editor
 
                 // Found matching config.
                 config = configToTest;
-
-                Debug.Log($"Processing: {assetName}", audioClip);
-                Debug.Log($"Using: {config.name}", config);
+                
+                Debug.Log($"Processing: <color=#2ECC71>{assetName}</color>", importer);
+                Debug.Log($"Using: <color=#3498DB>{config.name}</color>", config);
                 break;
             }
 

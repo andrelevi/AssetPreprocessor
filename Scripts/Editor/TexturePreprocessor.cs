@@ -15,10 +15,10 @@ namespace AssetPreprocessor.Scripts.Editor
         /// </summary>
         private void OnPreprocessTexture()
         {
-            var textureImporter = (TextureImporter) assetImporter;
+            var importer = (TextureImporter) assetImporter;
 
-            var assetPath = textureImporter.assetPath;
-            var textureName = AssetPreprocessorUtils.GetAssetNameFromPath(textureImporter.assetPath);
+            var assetPath = importer.assetPath;
+            var textureName = AssetPreprocessorUtils.GetAssetNameFromPath(importer.assetPath);
             var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
             var platformName = EditorUserBuildSettings.activeBuildTarget.ToString();
 			
@@ -53,10 +53,10 @@ namespace AssetPreprocessor.Scripts.Editor
             if (config == null) return;
 
             var currentPlatform = EditorUserBuildSettings.activeBuildTarget.ToString();
-            var currentPlatformSettings = textureImporter.GetPlatformTextureSettings(currentPlatform);
+            var currentPlatformSettings = importer.GetPlatformTextureSettings(currentPlatform);
 			
-            var hasAlpha = textureImporter.DoesSourceTextureHaveAlpha();
-            var nativeTextureSize = GetOriginalTextureSize(textureImporter);
+            var hasAlpha = importer.DoesSourceTextureHaveAlpha();
+            var nativeTextureSize = GetOriginalTextureSize(importer);
             var nativeSize = Mathf.NextPowerOfTwo(Mathf.Max(nativeTextureSize.width, nativeTextureSize.height));
             var currentFormat = currentPlatformSettings.format.ToString();
             
@@ -68,8 +68,8 @@ namespace AssetPreprocessor.Scripts.Editor
                 return;
             }
             
-            Debug.Log($"Processing: {textureName} | Native size: {nativeSize} | Current format: {currentFormat}", texture);
-            Debug.Log($"Using: {config.name}", config);
+            Debug.Log($"Processing: <color=#2ECC71>{textureName}</color> | Native size: {nativeSize} | Current format: {currentFormat}", importer);
+            Debug.Log($"Using: <color=#3498DB>{config.name}</color>", config);
             
             // If already contains correct texture format, skip adjusting import settings.
             var matchingSkipRegex = config.SkipIfCurrentTextureFormatMatchesRegexList.Find(regexString => new Regex(regexString).IsMatch(currentFormat));
@@ -83,12 +83,12 @@ namespace AssetPreprocessor.Scripts.Editor
             if (config.EnableReadWrite)
             {
                 Debug.Log("Enabling Read/Write.", texture);
-                textureImporter.isReadable = true;
+                importer.isReadable = true;
             }
             else
             {
                 Debug.Log("Disabling Read/Write.", texture);
-                textureImporter.isReadable = false;
+                importer.isReadable = false;
             }
 			
             var maxTextureSize = config.MaxTextureSize;
@@ -99,19 +99,19 @@ namespace AssetPreprocessor.Scripts.Editor
 
             if (config.ForceLinear)
             {
-                textureImporter.sRGBTexture = false;
+                importer.sRGBTexture = false;
             }
 
             if (config.ForceFilterMode)
             {
-                textureImporter.anisoLevel = config.AnisoLevel;
-                textureImporter.filterMode = config.FilterMode;
+                importer.anisoLevel = config.AnisoLevel;
+                importer.filterMode = config.FilterMode;
             }
             
-            textureImporter.mipmapEnabled = config.GenerateMipMaps;
-            textureImporter.streamingMipmaps = config.EnableMipMapStreaming;
+            importer.mipmapEnabled = config.GenerateMipMaps;
+            importer.streamingMipmaps = config.EnableMipMapStreaming;
 
-            SetTextureImporterPlatformSetting(config, textureImporter, texture, textureName, textureSize, format);
+            SetTextureImporterPlatformSetting(config, importer, texture, textureName, textureSize, format);
         }
 
         private static void SetTextureImporterPlatformSetting(

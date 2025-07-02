@@ -142,17 +142,17 @@ namespace AssetPreprocessor.Scripts.Editor
         
         private void OnPreprocessAnimation()
         {
-            var modelImporter = assetImporter as ModelImporter;
+            var importer = assetImporter as ModelImporter;
             
-            if (modelImporter.defaultClipAnimations.Length == 0) return;
+            if (importer.defaultClipAnimations.Length == 0) return;
             
-            var modelName = AssetPreprocessorUtils.GetAssetNameFromPath(modelImporter.assetPath);
+            var modelName = AssetPreprocessorUtils.GetAssetNameFromPath(importer.assetPath);
             
             var configs = AssetPreprocessorUtils.GetScriptableObjectsOfType<ModelPreprocessorConfig>();
 
             if (configs.Count == 0)
             {
-                Debug.Log($"Could not find a {nameof(ModelPreprocessorConfig)} in project.");
+                Debug.Log($"Could not find a {nameof(ModelPreprocessorConfig)} in project.", importer);
 
                 return;
             }
@@ -178,17 +178,17 @@ namespace AssetPreprocessor.Scripts.Editor
             // If could not find a matching config, don't process the asset.
             if (config == null) return;
             
-            if (modelImporter.clipAnimations.Length > 0 && !config.ForcePreprocess)
+            if (importer.clipAnimations.Length > 0 && !config.ForcePreprocess)
             {
                 Debug.Log($"Skipping Animation Preprocess - {modelName} - Animation has been preprocessed already before.", config);
                 
                 return;
             }
             
-            Debug.Log($"Processing animations for: {modelName}");
-            Debug.Log($"Using: {config.name}", config);
+            Debug.Log($"Processing animations for: <color=#2ECC71>{modelName}</color>", importer);
+            Debug.Log($"Using: <color=#3498DB>{config.name}</color>", config);
             
-            var clips = modelImporter.defaultClipAnimations.ToArray();
+            var clips = importer.defaultClipAnimations.ToArray();
 
             for (var i = 0; i < clips.Length; i++)
             {
@@ -203,7 +203,7 @@ namespace AssetPreprocessor.Scripts.Editor
                 clips[i] = clip;
             }
 
-            modelImporter.clipAnimations = clips;
+            importer.clipAnimations = clips;
         }
     }
 }
