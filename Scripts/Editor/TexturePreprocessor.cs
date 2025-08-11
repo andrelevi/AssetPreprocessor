@@ -10,6 +10,9 @@ namespace AssetPreprocessor.Scripts.Editor
 {
     class TexturePreprocessor : AssetPostprocessor
     {
+        // Ensure post-processor runs after libraries, e.g. Bakery lightmapper.
+        public override int GetPostprocessOrder() => 999;
+        
         /// <summary>
         /// https://docs.unity3d.com/ScriptReference/AssetPostprocessor.OnPreprocessTexture.html
         /// </summary>
