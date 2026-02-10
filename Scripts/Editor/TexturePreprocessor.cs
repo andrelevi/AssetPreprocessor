@@ -93,6 +93,11 @@ namespace AssetPreprocessor.Scripts.Editor
                 Debug.Log("Disabling Read/Write.", texture);
                 importer.isReadable = false;
             }
+
+            if (config.ForceTextureAsSprite)
+            {
+                importer.textureType = TextureImporterType.Sprite;
+            }
 			
             var maxTextureSize = config.MaxTextureSize;
             var multipliedNativeRes = Mathf.RoundToInt(nativeSize * config.NativeTextureSizeMultiplier);
@@ -126,7 +131,7 @@ namespace AssetPreprocessor.Scripts.Editor
             TextureImporterFormat format
         )
         {
-            Debug.Log($"Setting: {textureSize} | Format: {format} | {textureName}", texture);
+            Debug.Log($"Setting: {textureSize} | Format: {format} | {textureName}", textureImporter);
 
             config.PlatformsRegexList.ForEach(platformRegexString =>
             {

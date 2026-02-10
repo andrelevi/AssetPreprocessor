@@ -39,6 +39,7 @@ namespace AssetPreprocessor.Scripts.Editor
         public TextureImporterNPOTScale NPOTScale = TextureImporterNPOTScale.ToNearest;
         [Tooltip("By default each texture's max size will be based upon the texture's native size. Sometimes you might want to use a multiplier (such as 0.5) of that native size.")]
         public float NativeTextureSizeMultiplier = 1f;
+        public bool ForceTextureAsSprite;
 
         [Header("Filtering Settings")]
         public bool ForceFilterMode;
