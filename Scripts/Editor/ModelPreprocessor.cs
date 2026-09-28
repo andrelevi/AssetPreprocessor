@@ -7,48 +7,22 @@ namespace AssetPreprocessor.Scripts.Editor
 {
     public class ModelPreprocessor : AssetPostprocessor
     {
+        /// <summary>
+        /// Importer settings are applied here, before Unity imports the model, so this import already uses them.
+        /// Set in OnPostprocessModel they only reached the .meta, and took effect from the next import.
+        /// https://docs.unity3d.com/ScriptReference/AssetPostprocessor.OnPreprocessModel.html
+        /// </summary>
         private void OnPreprocessModel()
         {
-        }
-        
-        /// <summary>
-        /// https://docs.unity3d.com/ScriptReference/AssetPostprocessor.OnPostprocessModel.html
-        /// </summary>
-        /// <param name="gameObject">GameObject of the model.</param>
-        private void OnPostprocessModel(GameObject model)
-        {
             var modelImporter = (ModelImporter) assetImporter;
-            var modelName = AssetPreprocessorUtils.GetAssetNameFromPath(modelImporter.assetPath);
-
-            var configs = AssetPreprocessorUtils.GetScriptableObjectsOfType<ModelPreprocessorConfig>();
-
-            if (configs.Count == 0)
-            {
-                return;
-            }
-            
-            configs = configs
-                .Where(conf => conf.ShouldUseConfigForAssetImporter(assetImporter))
-                .ToList();
-            
-            configs.Sort((config1, config2) => config1.ConfigSortOrder.CompareTo(config2.ConfigSortOrder));
-
-            ModelPreprocessorConfig config = null;
-
-            for (var i = 0; i < configs.Count; i++)
-            {
-                var configToTest = configs[i];
-
-                // Found matching config.
-                config = configToTest;
-
-                Debug.Log($"Processing: {modelName}", model);
-                Debug.Log($"Using: {config.name}", config);
-                break;
-            }
+            var config = FindConfig();
 
             // If could not find a matching config, don't process the asset.
             if (config == null) return;
+
+            var modelName = AssetPreprocessorUtils.GetAssetNameFromPath(modelImporter.assetPath);
+            Debug.Log($"Processing: {modelName}", modelImporter);
+            Debug.Log($"Using: {config.name}", config);
 
             modelImporter.sortHierarchyByName = config.SortHierarchyByName;
             modelImporter.importLights = config.ImportLights;
@@ -57,12 +31,12 @@ namespace AssetPreprocessor.Scripts.Editor
             modelImporter.isReadable = config.EnableReadWrite;
             modelImporter.meshCompression = config.MeshCompression;
             modelImporter.resampleCurves = config.ResampleCurves;
-            
+
             if (config.ForceGenerateLightmapUVs)
             {
                 modelImporter.generateSecondaryUV = true;
             }
-            
+
             if (modelImporter.importAnimation)
             {
                 modelImporter.animationCompression = config.ModelImporterAnimationCompression;
@@ -78,7 +52,7 @@ namespace AssetPreprocessor.Scripts.Editor
             {
                 modelImporter.importBlendShapes = config.ImportBlendShapes;
             }
-            
+
             if (config.EnableAnimationPreprocessing &&
                 modelImporter.animationType != config.ModelImporterAnimationType)
             {
@@ -89,23 +63,36 @@ namespace AssetPreprocessor.Scripts.Editor
             {
                 modelImporter.optimizeGameObjects = config.OptimizeGameObjects;
                 modelImporter.extraExposedTransformPaths = config.ExtraExposedTransformPaths;
-                EditorUtility.SetDirty(model);
             }
-            
+        }
+
+        /// <summary>
+        /// Only the humanoid clip bone masks are set here: their bone paths come from the imported model.
+        /// https://docs.unity3d.com/ScriptReference/AssetPostprocessor.OnPostprocessModel.html
+        /// </summary>
+        /// <param name="gameObject">GameObject of the model.</param>
+        private void OnPostprocessModel(GameObject model)
+        {
+            var modelImporter = (ModelImporter) assetImporter;
+            var config = FindConfig();
+
+            // If could not find a matching config, don't process the asset.
+            if (config == null) return;
+
             if (config.EnableAnimationPreprocessing &&
                 modelImporter.animationType == ModelImporterAnimationType.Human)
             {
                 var clips = modelImporter.clipAnimations.ToArray();
-                
+
                 // Enable the bones for ALL of the model's animation clips.
                 for (var i = 0; i < clips.Length; i++)
                 {
                     var clip = clips[i];
 
                     if (clip.maskType != ClipAnimationMaskType.CreateFromThisModel) continue;
-                    
+
                     var serializedObject = new SerializedObject(modelImporter);
-                    
+
                     var transformMask = serializedObject.FindProperty($"m_ClipAnimations.Array.data[{i}].transformMask");
 
                     var arrayProperty = transformMask.FindPropertyRelative("Array");
@@ -113,41 +100,60 @@ namespace AssetPreprocessor.Scripts.Editor
                     for (var j = 0; j < arrayProperty.arraySize; j++)
                     {
                         var element = arrayProperty.GetArrayElementAtIndex(j);
-                        
+
                         var bonePath = element.FindPropertyRelative("m_Path").stringValue;
-                        
+
                         var shouldEnable = false;
-                        
+
                         if (AssetPreprocessorUtils.DoesRegexStringListMatchString(config.MaskBonesToEnable, bonePath))
                         {
                             if (config.EnableVerboseLogging)
                             {
                                 Debug.Log($"{clip.name} - Enabling Mask bone: {bonePath}", model);
                             }
-                            
+
                             shouldEnable = true;
                         }
-                        
+
                         element.FindPropertyRelative("m_Weight").floatValue = shouldEnable ? 1 : 0;
-                        
+
                         serializedObject.ApplyModifiedProperties();
                     }
                 }
-                    
+
                 EditorUtility.SetDirty(model);
             }
 
             Debug.Log($"Processed: {model.name}", model);
         }
-        
+
+        /// <summary>The matching config with the lowest ConfigSortOrder, or null.</summary>
+        private ModelPreprocessorConfig FindConfig()
+        {
+            var configs = AssetPreprocessorUtils.GetScriptableObjectsOfType<ModelPreprocessorConfig>();
+
+            if (configs.Count == 0)
+            {
+                return null;
+            }
+
+            configs = configs
+                .Where(conf => conf.ShouldUseConfigForAssetImporter(assetImporter))
+                .ToList();
+
+            configs.Sort((config1, config2) => config1.ConfigSortOrder.CompareTo(config2.ConfigSortOrder));
+
+            return configs.FirstOrDefault();
+        }
+
         private void OnPreprocessAnimation()
         {
             var importer = assetImporter as ModelImporter;
-            
+
             if (importer.defaultClipAnimations.Length == 0) return;
-            
+
             var modelName = AssetPreprocessorUtils.GetAssetNameFromPath(importer.assetPath);
-            
+
             var configs = AssetPreprocessorUtils.GetScriptableObjectsOfType<ModelPreprocessorConfig>();
 
             if (configs.Count == 0)
@@ -156,12 +162,12 @@ namespace AssetPreprocessor.Scripts.Editor
 
                 return;
             }
-            
+
             configs = configs
                 .Where(conf => conf.ShouldUseConfigForAssetImporter(assetImporter))
                 .Where(conf => conf.EnableAnimationPreprocessing)
                 .ToList();
-            
+
             configs.Sort((config1, config2) => config1.ConfigSortOrder.CompareTo(config2.ConfigSortOrder));
 
             ModelPreprocessorConfig config = null;
@@ -177,29 +183,29 @@ namespace AssetPreprocessor.Scripts.Editor
 
             // If could not find a matching config, don't process the asset.
             if (config == null) return;
-            
+
             if (importer.clipAnimations.Length > 0 && !config.ForcePreprocess)
             {
                 Debug.Log($"Skipping Animation Preprocess - {modelName} - Animation has been preprocessed already before.", config);
-                
+
                 return;
             }
-            
+
             Debug.Log($"Processing animations for: <color=#2ECC71>{modelName}</color>", importer);
             Debug.Log($"Using: <color=#3498DB>{config.name}</color>", config);
-            
+
             var clips = importer.defaultClipAnimations.ToArray();
 
             for (var i = 0; i < clips.Length; i++)
             {
                 var clip = clips[i];
-                
+
                 clip.keepOriginalPositionXZ = config.KeepOriginalPositionXZ;
                 clip.keepOriginalOrientation = config.KeepOriginalOrientation;
                 clip.keepOriginalPositionY = config.KeepOriginalPositionY;
-                
+
                 clip.maskType = config.ClipAnimationMaskType;
-                
+
                 clips[i] = clip;
             }
 
