@@ -32,5 +32,7 @@ namespace AssetPreprocessor.Scripts.Editor
 
         [Header("Sample Settings")]
         public AudioSampleRateSetting AudioSampleRateSetting = AudioSampleRateSetting.PreserveSampleRate;
+        [Tooltip("Used when AudioSampleRateSetting is OverrideSampleRate (Unity offers 8000, 11025, 22050, 44100, 48000, 96000 and 192000).")]
+        public uint SampleRateOverride = 22050;
     }
 }

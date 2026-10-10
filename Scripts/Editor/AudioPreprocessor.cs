@@ -117,6 +117,13 @@ namespace AssetPreprocessor.Scripts.Editor
                 hasSampleSettingsOverrides = true;
             }
 
+            if (config.AudioSampleRateSetting == AudioSampleRateSetting.OverrideSampleRate &&
+                sampleSettings.sampleRateOverride != config.SampleRateOverride)
+            {
+                sampleSettings.sampleRateOverride = config.SampleRateOverride;
+                hasSampleSettingsOverrides = true;
+            }
+
             if (hasSampleSettingsOverrides || config.ForcePreprocess)
             {
                 config.PlatformsRegexList.ForEach(platformRegexString => importer.SetOverrideSampleSettings(platformRegexString, sampleSettings));
